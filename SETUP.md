@@ -22,7 +22,21 @@ If `node` is not recognised after installing, close and reopen the terminal.
 
 ## 2. Open the project folder
 
+> **Windows: do not run this from a network drive.** If your Desktop or Documents
+> is redirected to a company file server, the path will start with `\\` (e.g.
+> `\\astracore.example.net\RedirectedDesktop8\...`). npm installs fail partway
+> on network paths and Vite's file watcher will not see your edits. Extract to a
+> local disk instead:
+>
+> ```powershell
+> mkdir C:\dev
+> Expand-Archive "$HOME\Downloads\ai-next.zip" -DestinationPath C:\dev
+> cd C:\dev\ai-next\web
+> ```
+
 Unzip `ai-next.zip` somewhere you can find it, then `cd` into the **web** folder.
+The commands below must run **inside `web`** — that is where `package.json` lives,
+not at the top of `ai-next`.
 
 **macOS / Linux**
 ```bash
@@ -158,6 +172,17 @@ fails the widget falls back to the built-in answers rather than going down.
 ---
 
 ## Troubleshooting
+
+**`npm error code ENOENT ... Could not read package.json`**
+You are one folder too high. `package.json` lives in `ai-next/web` (and in
+`ai-next/server`), not in `ai-next` itself. Run `dir` (Windows) or `ls` — if you
+see `web` and `server`, run `cd web` and try again. If you see another `ai-next`
+folder, the zip nested itself: `cd ai-next\web`.
+
+**Windows: install fails, hangs, or edits are not picked up**
+Check whether your path starts with `\\` — a redirected/network drive. Copy the
+project to a local disk (`C:\dev\ai-next`) and run it from there. See the note in
+step 2.
 
 **`npm error code EACCES` / permission denied (macOS or Linux)**
 Do not use `sudo npm install`. Make sure you own the folder:
