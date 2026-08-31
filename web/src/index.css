@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-white font-sans font-light antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    @apply bg-gold-500 text-ink;
+  }
+
+  :focus-visible {
+    outline: 2px solid theme('colors.gold.400');
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display uppercase;
+    font-variation-settings: 'wdth' 116;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+
+  /* Slim, gold-tinted scrollbars keep long panels feeling engineered. */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.24);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(212, 175, 55, 0.45);
+  }
+
+  /* Native selects render their popup with the OS palette; force ours. */
+  select option {
+    background-color: #161616;
+    color: #ffffff;
+  }
+}
+
+@layer components {
+  /* The single source of truth for the platform's glass surface. */
+  .glass {
+    @apply relative rounded-2xl border border-white/[0.07] bg-glass-panel shadow-glass backdrop-blur-xl;
+    background-color: rgba(22, 22, 22, 0.72);
+  }
+
+  .glass-hover {
+    @apply transition-all duration-500 ease-premium hover:border-gold-500/40 hover:shadow-gold;
+  }
+
+  .gold-text {
+    @apply bg-gold-gradient bg-clip-text text-transparent;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[11px] uppercase tracking-[0.24em] text-gold-500;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-gold-500/40 to-transparent;
+  }
+
+  /* Reusable field styling so every input across the app matches. */
+  .field {
+    @apply w-full rounded-xl border border-white/10 bg-ink-soft/80 px-4 py-3 text-sm text-white
+      placeholder:text-white/30 transition-colors duration-300
+      focus:border-gold-500/60 focus:outline-none focus:ring-1 focus:ring-gold-500/40;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Motion-sensitive users get the layout without the choreography. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}

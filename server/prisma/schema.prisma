@@ -1,0 +1,208 @@
+// AI NEXT — data model for the champion platform.
+//
+// Shapes mirror what the SPA renders: a department roster, the champions in it,
+// the projects they own, and the append-only trail of proof and reflection that
+// justifies every stage change.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Stage {
+  ideation
+  poc
+  validation
+  production
+  scaling
+}
+
+enum ChampionRole {
+  champion
+  specialist
+}
+
+enum ProofKind {
+  link
+  repo
+  screenshot
+  document
+}
+
+enum SubmissionStatus {
+  pending_review
+  approved
+  changes_requested
+}
+
+enum FlagSeverity {
+  low
+  medium
+  high
+}
+
+model Department {
+  code      String     @id @db.VarChar(8)
+  name      String
+  champions Champion[]
+  projects  Project[]
+  createdAt DateTime   @default(now())
+}
+
+model Champion {
+  id             String       @id @default(cuid())
+  name           String
+  email          String?      @unique
+  role           ChampionRole @default(champion)
+  batch          String       @default("Batch 01")
+  badge          String       @default("First Batch Champion")
+  joinedAt       DateTime     @default(now())
+
+  department     Department   @relation(fields: [departmentCode], references: [code])
+  departmentCode String       @db.VarChar(8)
+
+  // A champion leads some projects and contributes proof/reflections to others.
+  ledProjects    Project[]    @relation("ProjectLead")
+  proofs         Proof[]
+  reflections    Reflection[]
+  submissions    StatusSubmission[]
+
+  @@index([departmentCode])
+}
+
+model Project {
+  id                String     @id @default(cuid())
+  name              String
+  owner             String     // Business owner, who may not be a platform user.
+  stage             Stage      @default(ideation)
+  health            Int        @default(50) // 0-100 composite score.
+  milestonesCleared Int        @default(0)
+  pendingReview     Boolean    @default(false)
+
+  department        Department @relation(fields: [departmentCode], references: [code])
+  departmentCode    String     @db.VarChar(8)
+
+  lead              Champion?  @relation("ProjectLead", fields: [leadId], references: [id])
+  leadId            String?
+
+  proofs            Proof[]
+  reflections       Reflection[]
+  submissions       StatusSubmission[]
+  reviewFlags       ReviewFlag[]
+
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([departmentCode])
+  @@index([stage])
+}
+
+model Proof {
+  id         String    @id @default(cuid())
+  kind       ProofKind
+  name       String
+  detail     String    // URL, git remote or MIME type.
+  storageKey String?   // Object-storage key once uploads are wired up.
+  sizeBytes  Int?
+
+  project    Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId  String
+
+  addedBy    Champion? @relation(fields: [addedById], references: [id])
+  addedById  String?
+
+  createdAt  DateTime  @default(now())
+
+  @@index([projectId])
+}
+
+model Reflection {
+  id         String   @id @default(cuid())
+  stage      Stage
+  wins       String   @db.Text
+  blockers   String   @db.Text
+  learnings  String   @db.Text
+
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId  String
+
+  author     Champion @relation(fields: [authorId], references: [id])
+  authorId   String
+
+  createdAt  DateTime @default(now())
+
+  @@index([projectId, createdAt])
+}
+
+/// One submit action from the workspace: the stage claimed, plus the reflection
+/// and proof that back it. Kept separate from Project so the trail is append-only.
+model StatusSubmission {
+  id           String           @id @default(cuid())
+  fromStage    Stage
+  toStage      Stage
+  status       SubmissionStatus @default(pending_review)
+  reviewer     String?
+  reviewNote   String?          @db.Text
+
+  project      Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId    String
+
+  champion     Champion         @relation(fields: [championId], references: [id])
+  championId   String
+
+  reflectionId String?
+
+  createdAt    DateTime         @default(now())
+  resolvedAt   DateTime?
+
+  @@index([projectId, createdAt])
+  @@index([status])
+}
+
+model ReviewFlag {
+  id        String       @id @default(cuid())
+  reason    String
+  severity  FlagSeverity @default(medium)
+  resolved  Boolean      @default(false)
+
+  project   Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+
+  createdAt DateTime     @default(now())
+
+  @@index([projectId, resolved])
+}
+
+/// Fortnightly issues. Generated on the 15-day cadence, then edited in place.
+model NewsletterIssue {
+  id          String    @id @default(cuid())
+  number      Int       @unique
+  headline    String
+  lede        String    @db.Text
+  body        String?   @db.Text
+  tags        String[]
+  publishedAt DateTime?
+  scheduledAt DateTime
+
+  @@index([scheduledAt])
+}
+
+/// Playbook, governance policy and the government frameworks.
+model Resource {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  kicker    String?
+  title     String
+  body      String   @db.Text
+  meta      String?
+  href      String
+  category  String   @default("document") // document | framework
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([category, order])
+}
