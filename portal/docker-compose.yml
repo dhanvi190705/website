@@ -1,0 +1,48 @@
+# On-prem deployment: one Postgres container, one app container, two volumes.
+#
+#   docker compose up -d --build
+#   -> http://localhost:3000
+#
+# On first boot the app has no users. Visit /setup to create the first
+# AI/Tech Team administrator; the route disables itself once one exists.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ainext
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ainext}
+      POSTGRES_DB: ainext
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ainext -d ainext"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    # Not published by default — the app reaches it over the compose network.
+    # Uncomment to inspect the database from the host.
+    # ports:
+    #   - "5432:5432"
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://ainext:${POSTGRES_PASSWORD:-ainext}@db:5432/ainext?schema=public
+      SESSION_SECRET: ${SESSION_SECRET:?set SESSION_SECRET in .env before starting}
+      SESSION_TTL_HOURS: ${SESSION_TTL_HOURS:-12}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      UPLOAD_DIR: /app/uploads
+    ports:
+      - "3000:3000"
+    volumes:
+      - uploads:/app/uploads
+
+volumes:
+  db-data:
+  uploads:

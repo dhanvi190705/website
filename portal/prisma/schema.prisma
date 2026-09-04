@@ -1,0 +1,157 @@
+// AI.Next Portal — data model.
+//
+// The portal ships with NO seed data. The first AI/Tech Team administrator is
+// created through /setup, and every user, business unit and project after that
+// is created by an administrator inside the app.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Role-based access. CHAMPION sees their own project; TECH_TEAM sees
+/// everything and holds the administrative and publishing surfaces.
+enum Role {
+  CHAMPION
+  TECH_TEAM
+}
+
+/// The standardized 5-stage project pipeline. Order matters — progress,
+/// distribution and bottleneck reporting all read the ordinal.
+enum Stage {
+  IDEATION_SOLUTION_DEFINITION
+  FEASIBILITY_SCOPING
+  DEVELOPMENT_INTEGRATION
+  TESTING_PILOT_DEPLOYMENT
+  FULL_ADOPTION_VALUE_REALIZATION
+}
+
+enum EvidenceKind {
+  LINK
+  FILE
+}
+
+model BusinessUnit {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  code      String?   @unique
+  users     User[]
+  projects  Project[]
+  createdAt DateTime  @default(now())
+}
+
+model User {
+  id             String        @id @default(cuid())
+  email          String        @unique
+  name           String
+  passwordHash   String
+  role           Role          @default(CHAMPION)
+  active         Boolean       @default(true)
+
+  /// Champions are mapped to a business unit; AI/Tech Team members need not be.
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id], onDelete: SetNull)
+  businessUnitId String?
+
+  projects       Project[]     @relation("ProjectChampion")
+  updates        ProjectUpdate[]
+  evidence       Evidence[]
+  announcements  Announcement[]
+
+  createdAt      DateTime      @default(now())
+  lastLoginAt    DateTime?
+
+  @@index([businessUnitId])
+  @@index([role])
+}
+
+model Project {
+  id             String        @id @default(cuid())
+  name           String
+  summary        String?       @db.Text
+  stage          Stage         @default(IDEATION_SOLUTION_DEFINITION)
+
+  /// The champion who owns day-to-day progress. Nullable so an administrator
+  /// can create a project before deciding who runs it.
+  champion       User?         @relation("ProjectChampion", fields: [championId], references: [id], onDelete: SetNull)
+  championId     String?
+
+  businessUnit   BusinessUnit  @relation(fields: [businessUnitId], references: [id])
+  businessUnitId String
+
+  updates        ProjectUpdate[]
+  evidence       Evidence[]
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([businessUnitId])
+  @@index([championId])
+  @@index([stage])
+}
+
+/// Append-only progress trail. The project's current stage is a denormalised
+/// copy of the newest update, kept so listing pages need no subquery.
+model ProjectUpdate {
+  id         String   @id @default(cuid())
+  fromStage  Stage
+  toStage    Stage
+  note       String   @db.Text
+
+  project    Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId  String
+
+  author     User     @relation(fields: [authorId], references: [id])
+  authorId   String
+
+  createdAt  DateTime @default(now())
+
+  @@index([projectId, createdAt])
+}
+
+/// Proof of work. A LINK carries its URL in `url`; a FILE is written to the
+/// upload volume and served back through an authenticated route by id.
+model Evidence {
+  id           String       @id @default(cuid())
+  kind         EvidenceKind
+  label        String
+  note         String?      @db.Text
+  stage        Stage
+
+  url          String?
+  storedName   String?
+  originalName String?
+  mimeType     String?
+  sizeBytes    Int?
+
+  project      Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId    String
+
+  uploadedBy   User         @relation(fields: [uploadedById], references: [id])
+  uploadedById String
+
+  createdAt    DateTime     @default(now())
+
+  @@index([projectId, createdAt])
+}
+
+/// Intimations, circulars and action items. Published by the AI/Tech Team,
+/// read-only for Champions.
+model Announcement {
+  id          String    @id @default(cuid())
+  title       String
+  body        String    @db.Text
+  pinned      Boolean   @default(false)
+  publishedAt DateTime?
+
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    String
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([publishedAt])
+}

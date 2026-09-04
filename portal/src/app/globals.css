@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS — PLACEHOLDER PALETTE
+
+   This is the one place the visual identity is defined. The values below are a
+   neutral premium dark + gold system standing in until the real Rustomjee
+   brand assets are supplied. Swapping the brand means editing this block and
+   the fonts below — no component references a raw colour.
+
+   Channels are space-separated RGB so Tailwind can apply opacity modifiers
+   (e.g. `text-accent/60`).
+   ══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  --c-ground: 11 11 11;
+  --c-surface: 22 22 22;
+  --c-surface-raised: 29 29 29;
+  --c-line: 44 44 44;
+
+  --c-ink: 255 255 255;
+  --c-ink-muted: 168 168 168;
+  --c-ink-faint: 112 112 112;
+
+  --c-accent: 212 175 55;
+  --c-accent-bright: 255 215 0;
+  --c-accent-deep: 138 111 31;
+
+  --c-ok: 74 222 128;
+  --c-warn: 251 191 36;
+  --c-risk: 248 113 113;
+  --c-info: 125 167 219;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-ground text-ink font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-ground;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-accent-bright));
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-accent) / 0.25);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(var(--c-accent) / 0.45);
+  }
+
+  /* Native select popups render in the OS palette unless forced. */
+  select option {
+    background-color: rgb(var(--c-surface));
+    color: rgb(var(--c-ink));
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-card border border-line/70 bg-surface/80 shadow-card backdrop-blur-xl;
+  }
+
+  .accent-text {
+    @apply bg-accent-gradient bg-clip-text text-transparent;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.2em] text-accent;
+  }
+
+  .label {
+    @apply mb-2 block font-mono text-[10px] uppercase tracking-[0.16em] text-ink-muted;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-ground/70 px-4 py-3 text-sm text-ink
+      placeholder:text-ink-faint transition-colors duration-300
+      focus:border-accent/60 focus:outline-none focus:ring-1 focus:ring-accent/40
+      disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-accent/35 to-transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}

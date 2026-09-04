@@ -1,4 +1,14 @@
-# AI NEXT — Champion Platform (MVP)
+# AI.Next
+
+> **Start here: [`portal/`](portal/README.md)** — the AI.Next Portal (Next.js +
+> Prisma + PostgreSQL, Dockerized for on-prem). That is the current application.
+>
+> `web/` and `server/` below are an earlier Vite + Express MVP, kept for
+> reference and superseded by the portal.
+
+---
+
+## AI NEXT — Champion Platform (earlier MVP)
 
 An exclusive workspace for AI Champions and Specialists: a tabbed single-page app
 where champions track a project through the pipeline, attach proof of work, log
