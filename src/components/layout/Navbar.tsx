@@ -19,13 +19,13 @@ export function Navbar() {
   const isAdmin = role === "AI_TECH_TEAM";
 
   const links = [
+    { href: "/about", label: "About AI.Next", icon: Info },
     isAdmin
       ? { href: "/dashboard", label: "Executive Dashboard", icon: LayoutDashboard }
       : { href: "/champion", label: "My Projects", icon: LayoutDashboard },
-    isAdmin ? { href: "/admin", label: "Admin Panel", icon: ShieldCheck } : null,
     isAdmin ? { href: "/publish", label: "Publishing Hub", icon: Megaphone } : null,
     { href: "/resources", label: "Resources", icon: BookOpen },
-    { href: "/about", label: "About AI.Next", icon: Info },
+    isAdmin ? { href: "/admin", label: "Admin Panel", icon: ShieldCheck } : null,
   ].filter(Boolean) as { href: string; label: string; icon: typeof LayoutDashboard }[];
 
   return (
