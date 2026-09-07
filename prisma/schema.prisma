@@ -1,0 +1,186 @@
+// AI Next Portal - Prisma schema
+// PostgreSQL + Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+enum Role {
+  AI_TECH_TEAM // Admin / platform owner
+  AI_CHAMPION // Business-unit project owner
+}
+
+enum ProjectStage {
+  IDEATION_AND_SOLUTION_DEFINITION
+  FEASIBILITY_AND_SCOPING
+  DEVELOPMENT_AND_INTEGRATION
+  TESTING_AND_PILOT_DEPLOYMENT
+  FULL_ADOPTION_AND_VALUE_REALIZATION
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum ResourceCategory {
+  PLAYBOOK
+  POLICY
+  NEWSLETTER
+  OTHER
+}
+
+// ---------------------------------------------------------------------------
+// Core models
+// ---------------------------------------------------------------------------
+
+model BusinessUnit {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users    User[]
+  projects Project[]
+
+  @@map("business_units")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(AI_CHAMPION)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  businessUnitId String?
+  businessUnit   BusinessUnit? @relation(fields: [businessUnitId], references: [id], onDelete: SetNull)
+
+  // Projects this user champions (relevant when role = AI_CHAMPION)
+  championedProjects Project[] @relation("ProjectChampion")
+
+  // Projects this user created (relevant when role = AI_TECH_TEAM)
+  createdProjects Project[] @relation("ProjectCreatedBy")
+
+  stageChanges  ProjectStageHistory[]
+  evidenceItems Evidence[]
+  announcements Announcement[]
+  resources     Resource[]
+
+  @@index([businessUnitId])
+  @@map("users")
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String
+  stage       ProjectStage  @default(IDEATION_AND_SOLUTION_DEFINITION)
+  status      ProjectStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  businessUnitId String
+  businessUnit   BusinessUnit @relation(fields: [businessUnitId], references: [id], onDelete: Restrict)
+
+  championId String?
+  champion   User?   @relation("ProjectChampion", fields: [championId], references: [id], onDelete: SetNull)
+
+  createdById String
+  createdBy   User   @relation("ProjectCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  stageHistory ProjectStageHistory[]
+  evidence     Evidence[]
+
+  @@index([businessUnitId])
+  @@index([championId])
+  @@index([stage])
+  @@index([status])
+  @@map("projects")
+}
+
+model ProjectStageHistory {
+  id        String        @id @default(cuid())
+  fromStage ProjectStage?
+  toStage   ProjectStage
+  notes     String?
+  createdAt DateTime      @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  changedById String
+  changedBy   User   @relation(fields: [changedById], references: [id], onDelete: Restrict)
+
+  @@index([projectId])
+  @@map("project_stage_history")
+}
+
+model Evidence {
+  id          String   @id @default(cuid())
+  fileName    String
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  description String?
+  createdAt   DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([projectId])
+  @@map("evidence")
+}
+
+model Announcement {
+  id          String    @id @default(cuid())
+  title       String
+  content     String // Markdown
+  isPublished Boolean   @default(true)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([isPublished])
+  @@map("announcements")
+}
+
+model Resource {
+  id          String            @id @default(cuid())
+  title       String
+  description String?
+  category    ResourceCategory  @default(OTHER)
+  fileUrl     String
+  fileName    String
+  fileType    String
+  fileSize    Int
+  createdAt   DateTime          @default(now())
+
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id], onDelete: Restrict)
+
+  @@index([category])
+  @@map("resources")
+}

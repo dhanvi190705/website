@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ainext
+      POSTGRES_PASSWORD: ainext
+      POSTGRES_DB: ai_next_portal
+    volumes:
+      - ai_next_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ainext -d ai_next_portal"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://ainext:ainext@db:5432/ai_next_portal?schema=public
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:?set NEXTAUTH_SECRET in .env}
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      ROOT_ADMIN_NAME: ${ROOT_ADMIN_NAME:-AI Tech Team Admin}
+      ROOT_ADMIN_EMAIL: ${ROOT_ADMIN_EMAIL:-admin@rustomjee.com}
+      ROOT_ADMIN_PASSWORD: ${ROOT_ADMIN_PASSWORD:?set ROOT_ADMIN_PASSWORD in .env}
+      UPLOAD_DIR: public/uploads
+      UPLOAD_MAX_SIZE_MB: ${UPLOAD_MAX_SIZE_MB:-25}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ai_next_uploads:/app/public/uploads
+
+volumes:
+  ai_next_pgdata:
+  ai_next_uploads:
