@@ -29,7 +29,7 @@ export default async function ChampionDashboardPage() {
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6">
       <div>
         <h1 className="text-2xl font-semibold text-neutral-50">
-          Welcome back, {session.user.name.split(" ")[0]}
+          Welcome back, {(session.user.name ?? "").split(" ")[0] || "there"}
         </h1>
         <p className="mt-1 text-sm text-neutral-500">
           {session.user.businessUnitName

@@ -9,7 +9,7 @@ import { STAGE_ORDER } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
-const BOTTLENECK_STAGES = [
+const BOTTLENECK_STAGES: ProjectStage[] = [
   ProjectStage.FEASIBILITY_AND_SCOPING,
   ProjectStage.TESTING_AND_PILOT_DEPLOYMENT,
 ];
