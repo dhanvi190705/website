@@ -54,7 +54,7 @@ export function KpiCards({
         icon={Building2}
         label="Active Business Units"
         value={activeBusinessUnits}
-        sublabel="Onboarded to AI.Next"
+        sublabel="Onboarded to AI NEXT"
       />
     </div>
   );

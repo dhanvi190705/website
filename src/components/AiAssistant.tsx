@@ -43,7 +43,7 @@ export function AiAssistant() {
                 <Sparkles className="h-4 w-4" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-neutral-100">AI.Next Assistant</p>
+                <p className="text-sm font-semibold text-neutral-100">AI NEXT Assistant</p>
                 <p className="text-[11px] text-neutral-500">Grounded on platform FAQs &amp; governance</p>
               </div>
             </div>
@@ -106,7 +106,7 @@ export function AiAssistant() {
                 <input
                   value={input}
                   onChange={handleInputChange}
-                  placeholder="Ask the AI.Next Assistant…"
+                  placeholder="Ask the AI NEXT Assistant…"
                   className="input-field flex-1 text-sm"
                   disabled={configured === null}
                 />

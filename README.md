@@ -1,4 +1,4 @@
-# AI.Next Portal
+# AI NEXT
 
 Centralized management platform for tracking and scaling AI initiatives across
 Rustomjee business units — a standardized 5-stage project pipeline, audit
@@ -9,7 +9,7 @@ history, evidence uploads, executive KPIs, and a Claude-powered assistant.
 - **Framework:** Next.js 14 (TypeScript, App Router)
 - **Database / ORM:** PostgreSQL + Prisma
 - **Auth:** NextAuth.js (Credentials provider, JWT sessions)
-- **Styling:** Tailwind CSS — dark mode with gold (`#D4AF37`) accents
+- **Styling:** Tailwind CSS — dark mode with vivid yellow (`#FFD400`) accents
 - **AI:** Vercel AI SDK (`ai`, `@ai-sdk/anthropic`) streaming Claude 3.5 Sonnet
 - **File storage:** Local filesystem (`public/uploads`), Docker-volume friendly
 - **Deployment:** Docker / Docker Compose (on-premise)

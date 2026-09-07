@@ -8,12 +8,12 @@ import {
   LogOut,
   Megaphone,
   ShieldCheck,
-  Sparkles,
   BookOpen,
   Info,
   UserCircle,
 } from "lucide-react";
 
+import { Logo } from "@/components/Logo";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -28,7 +28,7 @@ export function Navbar() {
   const isAdmin = role === "AI_TECH_TEAM";
 
   const links = [
-    { href: "/about", label: "About AI.Next", icon: Info },
+    { href: "/about", label: "About", icon: Info },
     isAdmin
       ? { href: "/dashboard", label: "Executive Dashboard", icon: LayoutDashboard }
       : { href: "/champion", label: "My Projects", icon: LayoutDashboard },
@@ -41,10 +41,7 @@ export function Navbar() {
     <header className="sticky top-0 z-40 border-b border-surface-border bg-surface-500/90 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href={isAdmin ? "/dashboard" : "/champion"} className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-gold-500" />
-          <span className="text-sm font-semibold tracking-wide text-neutral-50">
-            AI<span className="text-gold-500">.Next</span> Portal
-          </span>
+          <Logo size="sm" />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

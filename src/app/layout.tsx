@@ -8,7 +8,7 @@ import { Providers } from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "AI.Next Portal | Rustomjee",
+  title: "AI NEXT | Rustomjee",
   description:
     "Centralized management platform for tracking and scaling AI initiatives across Rustomjee business units.",
 };

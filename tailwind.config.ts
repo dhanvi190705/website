@@ -7,17 +7,17 @@ const config: Config = {
     extend: {
       colors: {
         gold: {
-          DEFAULT: "#D4AF37",
-          50: "#FBF6E7",
-          100: "#F6ECC9",
-          200: "#EEDA97",
-          300: "#E5C765",
-          400: "#DDBB4E",
-          500: "#D4AF37",
-          600: "#B3922B",
-          700: "#8A7122",
-          800: "#61501A",
-          900: "#382E0F",
+          DEFAULT: "#FFD400",
+          50: "#FFFDF0",
+          100: "#FFF9CC",
+          200: "#FFF08A",
+          300: "#FFE44D",
+          400: "#FFDA1A",
+          500: "#FFD400",
+          600: "#E6BF00",
+          700: "#B39400",
+          800: "#806A00",
+          900: "#4D4000",
         },
         surface: {
           DEFAULT: "#0B0C0F",
@@ -41,7 +41,7 @@ const config: Config = {
         ],
       },
       boxShadow: {
-        gold: "0 0 0 1px rgba(212,175,55,0.35), 0 8px 24px -8px rgba(212,175,55,0.25)",
+        gold: "0 0 0 1px rgba(255,212,0,0.35), 0 8px 24px -8px rgba(255,212,0,0.3)",
       },
       animation: {
         "fade-in": "fadeIn 0.2s ease-out",

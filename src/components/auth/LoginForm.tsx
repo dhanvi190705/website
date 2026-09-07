@@ -5,6 +5,8 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
+import { Logo } from "@/components/Logo";
+
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -44,9 +46,7 @@ export function LoginForm() {
           <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-gold-600/40 bg-gold-500/10 shadow-gold">
             <Sparkles className="h-6 w-6 text-gold-500" />
           </div>
-          <h1 className="text-xl font-semibold text-neutral-50">
-            AI<span className="text-gold-500">.Next</span> Portal
-          </h1>
+          <Logo size="md" />
           <p className="text-sm text-neutral-500">
             Rustomjee&apos;s AI initiative management platform
           </p>

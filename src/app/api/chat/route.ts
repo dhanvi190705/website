@@ -7,7 +7,7 @@ import { getSession } from "@/lib/session";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const SYSTEM_PROMPT = `You are the AI.Next Assistant, a helpful concierge embedded inside the
+const SYSTEM_PROMPT = `You are the AI NEXT Assistant, a helpful concierge embedded inside the
 "AI Next Portal" — Rustomjee's internal platform for tracking and scaling AI
 initiatives across business units (Construction, Sales, Design, Facility
 Management, and others).

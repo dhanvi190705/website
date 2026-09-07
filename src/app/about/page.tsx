@@ -1,6 +1,6 @@
 import { Lightbulb, Network, Share2, Sparkles, TrendingUp, Users } from "lucide-react";
 
-import { displayFont } from "./display-font";
+import { displayFont } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 
 const STATS = [
@@ -42,7 +42,7 @@ export default function AboutPage() {
             "bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 bg-[length:200%_auto] bg-clip-text text-5xl font-bold leading-tight text-transparent [animation-duration:6s] animate-gradient-shift sm:text-6xl"
           )}
         >
-          This is AI.Next
+          This is AI NEXT
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-neutral-300 sm:text-xl">
           We&apos;re on a mission to bring AI into everyday work at Rustomjee — across{" "}
@@ -161,7 +161,7 @@ export default function AboutPage() {
         </p>
         <p className="mx-auto max-w-lg text-sm leading-relaxed text-neutral-400">
           Questions about the program, governance, or how to get your business unit
-          involved? Reach out to your AI Tech Team admin, or ask the AI.Next Assistant in
+          involved? Reach out to your AI Tech Team admin, or ask the AI NEXT Assistant in
           the bottom-right corner of any page.
         </p>
       </div>
