@@ -1,9 +1,13 @@
 import { Lightbulb, Network, Share2, Sparkles, TrendingUp, Users } from "lucide-react";
 
+import { displayFont } from "./display-font";
+import { cn } from "@/lib/utils";
+
 const STATS = [
-  { value: "38", label: "AI Champions" },
-  { value: "10", label: "AI Specialists" },
-  { value: "14", label: "Departments" },
+  { value: "35", label: "AI Champions" },
+  { value: "11", label: "AI Specialists" },
+  { value: "7", label: "Tech Specialists" },
+  { value: "15", label: "Departments" },
 ];
 
 const PILLARS = [
@@ -11,87 +15,152 @@ const PILLARS = [
     icon: Lightbulb,
     title: "Augmenting, Not Replacing",
     description:
-      "We enable the use of AI to build better strategies, better decisions, and faster decision-making — augmenting human intervention and experience, not replacing it.",
+      "We put AI to work on better strategy, sharper decisions, and faster calls — amplifying human judgment and experience, never standing in for it.",
   },
   {
     icon: TrendingUp,
     title: "Tech Meets Experience",
     description:
-      "We bring tech and experience together to enable speedier, more insightful deliveries — driving functional efficiency, helping teams hit targets faster, and building long-term improvement.",
+      "We pair technology with real, on-the-ground experience to ship faster, sharper work — driving functional efficiency, helping teams hit their targets, and compounding into long-term improvement.",
   },
 ];
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-5xl space-y-12 px-4 py-12 sm:px-6">
-      <div className="text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-gold-600/40 bg-gold-500/10 shadow-gold">
-          <Sparkles className="h-7 w-7 text-gold-500" />
+    <div className="mx-auto max-w-5xl space-y-16 px-4 py-16 sm:px-6">
+      {/* Hero */}
+      <div className="animate-slide-up text-center">
+        <div className="mx-auto mb-6 flex h-16 w-16 animate-float items-center justify-center rounded-2xl border border-gold-600/40 bg-gold-500/10 shadow-gold">
+          <Sparkles className="h-8 w-8 text-gold-500" />
         </div>
-        <h1 className="text-3xl font-semibold text-neutral-50">
-          About AI<span className="text-gold-500">.Next</span>
+        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-gold-500">
+          Our Story
+        </p>
+        <h1
+          className={cn(
+            displayFont.className,
+            "bg-gradient-to-r from-gold-300 via-gold-500 to-gold-300 bg-[length:200%_auto] bg-clip-text text-5xl font-bold leading-tight text-transparent [animation-duration:6s] animate-gradient-shift sm:text-6xl"
+          )}
+        >
+          This is AI.Next
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm text-neutral-400">
-          AI Next is an initiative to adopt AI in everyday work across all departments at
-          Rustomjee in a structured manner — rather than working in silos.
+        <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-neutral-300 sm:text-xl">
+          We&apos;re on a mission to bring AI into everyday work at Rustomjee — across{" "}
+          <span className="font-semibold text-gold-400">every</span> department, in one
+          structured, connected effort, instead of a hundred separate ones.
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {STATS.map(({ value, label }) => (
-          <div key={label} className="card p-6 text-center">
-            <p className="text-3xl font-semibold text-gold-500">{value}</p>
-            <p className="mt-1 text-sm text-neutral-400">{label}</p>
+      {/* Narrative */}
+      <div
+        className="animate-slide-up space-y-5 text-center text-base leading-relaxed text-neutral-400 sm:text-lg"
+        style={{ animationDelay: "80ms" }}
+      >
+        <p>
+          Not a mandate handed down from the top — a network, built team by team. We help
+          people put AI to work on better strategy, sharper decisions, and faster calls,
+          amplifying human judgment and experience rather than standing in for it.
+        </p>
+        <p>
+          What started as a small, scrappy effort has grown into a company-wide movement —
+          real people, in real departments, solving real problems with AI, and sharing what
+          works so progress in one team lifts every team.
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid animate-slide-up grid-cols-2 gap-4 sm:grid-cols-4" style={{ animationDelay: "160ms" }}>
+        {STATS.map(({ value, label }, i) => (
+          <div
+            key={label}
+            className="group card animate-slide-up p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:border-gold-600/60 hover:shadow-gold"
+            style={{ animationDelay: `${200 + i * 60}ms` }}
+          >
+            <p
+              className={cn(
+                displayFont.className,
+                "text-4xl font-bold text-gold-500 transition-transform duration-300 group-hover:scale-110 sm:text-5xl"
+              )}
+            >
+              {value}
+            </p>
+            <p className="mt-2 text-sm text-neutral-400">{label}</p>
           </div>
         ))}
       </div>
-      <p className="-mt-6 text-center text-xs text-neutral-600">
-        What started as a small effort has grown into a company-wide network of AI Champions
-        and AI Specialists, each driving AI adoption within their own teams.
+      <p className="-mt-10 text-center text-xs text-neutral-600">
+        Each Champion and Specialist drives AI adoption within their own team — turning
+        company-wide ambition into department-level momentum.
       </p>
 
+      {/* Pillars */}
       <div className="grid gap-4 md:grid-cols-2">
-        {PILLARS.map(({ icon: Icon, title, description }) => (
-          <div key={title} className="card p-5">
-            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gold-500/10 text-gold-500">
+        {PILLARS.map(({ icon: Icon, title, description }, i) => (
+          <div
+            key={title}
+            className="animate-slide-up card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold-600/60 hover:shadow-gold"
+            style={{ animationDelay: `${240 + i * 80}ms` }}
+          >
+            <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-gold-500/10 text-gold-500">
               <Icon className="h-5 w-5" />
             </div>
-            <h3 className="mb-1 text-sm font-semibold text-neutral-100">{title}</h3>
-            <p className="text-sm text-neutral-500">{description}</p>
+            <h3 className={cn(displayFont.className, "mb-2 text-lg font-semibold text-neutral-100")}>
+              {title}
+            </h3>
+            <p className="text-sm leading-relaxed text-neutral-500">{description}</p>
           </div>
         ))}
       </div>
 
+      {/* Agenda / Going forward */}
       <div className="grid gap-4 md:grid-cols-2">
-        <div className="card p-5">
+        <div
+          className="animate-slide-up card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold-600/60 hover:shadow-gold"
+          style={{ animationDelay: "320ms" }}
+        >
           <div className="mb-3 flex items-center gap-2">
             <Network className="h-4 w-4 text-gold-500" />
-            <h3 className="text-sm font-semibold text-neutral-100">Our Agenda</h3>
+            <h3 className={cn(displayFont.className, "text-lg font-semibold text-neutral-100")}>
+              Our Agenda
+            </h3>
           </div>
-          <p className="text-sm text-neutral-500">
-            Identify real problems in each department, build practical AI-driven solutions for
-            them, and share what works across the company — so progress in one team lifts
-            every team.
+          <p className="text-sm leading-relaxed text-neutral-500">
+            Find real problems in each department, build practical AI-driven solutions for
+            them, and share what works across the company — so a win in one team becomes a
+            win for every team.
           </p>
         </div>
-        <div className="card p-5">
+        <div
+          className="animate-slide-up card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-gold-600/60 hover:shadow-gold"
+          style={{ animationDelay: "380ms" }}
+        >
           <div className="mb-3 flex items-center gap-2">
             <Share2 className="h-4 w-4 text-gold-500" />
-            <h3 className="text-sm font-semibold text-neutral-100">Going Forward</h3>
+            <h3 className={cn(displayFont.className, "text-lg font-semibold text-neutral-100")}>
+              Going Forward
+            </h3>
           </div>
-          <p className="text-sm text-neutral-500">
-            We aim to scale this network further, turn individual tools into shared, reusable
-            systems, and make AI a permanent part of how Rustomjee operates.
+          <p className="text-sm leading-relaxed text-neutral-500">
+            We&apos;re scaling the network further, turning one-off tools into shared,
+            reusable systems, and making AI a permanent part of how Rustomjee operates —
+            not a project, a habit.
           </p>
         </div>
       </div>
 
-      <div className="card p-6 text-center">
-        <div className="mx-auto mb-2 flex h-9 w-9 items-center justify-center rounded-lg bg-gold-500/10 text-gold-500">
-          <Users className="h-4 w-4" />
+      {/* CTA */}
+      <div
+        className="animate-slide-up card p-8 text-center transition-all duration-300 hover:border-gold-600/60"
+        style={{ animationDelay: "440ms" }}
+      >
+        <div className="mx-auto mb-3 flex h-10 w-10 animate-float items-center justify-center rounded-lg bg-gold-500/10 text-gold-500">
+          <Users className="h-5 w-5" />
         </div>
-        <p className="text-sm text-neutral-400">
-          Questions about the program, governance rules, or how to get your business unit
+        <p className={cn(displayFont.className, "mb-1 text-lg font-semibold text-neutral-100")}>
+          Want in?
+        </p>
+        <p className="mx-auto max-w-lg text-sm leading-relaxed text-neutral-400">
+          Questions about the program, governance, or how to get your business unit
           involved? Reach out to your AI Tech Team admin, or ask the AI.Next Assistant in
           the bottom-right corner of any page.
         </p>
