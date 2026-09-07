@@ -13,6 +13,8 @@
  *   ROOT_ADMIN_EMAIL    (default: "admin@rustomjee.com")
  *   ROOT_ADMIN_PASSWORD (default: "ChangeMe!12345")
  */
+import "dotenv/config";
+
 import { PrismaClient, Role } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import readline from "node:readline/promises";
