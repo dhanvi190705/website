@@ -41,5 +41,6 @@ export const config = {
     "/champion/:path*",
     "/publish/:path*",
     "/projects/:path*",
+    "/account/:path*",
   ],
 };

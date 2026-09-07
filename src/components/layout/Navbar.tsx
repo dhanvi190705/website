@@ -3,7 +3,16 @@
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, Megaphone, ShieldCheck, Sparkles, BookOpen, Info } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  Megaphone,
+  ShieldCheck,
+  Sparkles,
+  BookOpen,
+  Info,
+  UserCircle,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -57,12 +66,25 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden text-right sm:block">
-            <p className="text-sm font-medium text-neutral-100">{session.user.name}</p>
+          <Link
+            href="/account"
+            className="hidden text-right sm:block"
+            title="Account settings"
+          >
+            <p className="text-sm font-medium text-neutral-100 transition hover:text-gold-400">
+              {session.user.name}
+            </p>
             <p className="text-xs text-neutral-500">
               {isAdmin ? "AI Tech Team" : session.user.businessUnitName ?? "AI Champion"}
             </p>
-          </div>
+          </Link>
+          <Link
+            href="/account"
+            className="flex items-center gap-1.5 rounded-lg border border-surface-border px-3 py-1.5 text-sm text-neutral-400 transition hover:border-gold-600 hover:text-gold-400 sm:hidden"
+            title="Account settings"
+          >
+            <UserCircle className="h-4 w-4" />
+          </Link>
           <button
             onClick={() => signOut({ callbackUrl: "/login" })}
             className="flex items-center gap-1.5 rounded-lg border border-surface-border px-3 py-1.5 text-sm text-neutral-400 transition hover:border-gold-600 hover:text-gold-400"
